@@ -1,0 +1,4 @@
+gem build
+gem push paypal-rest-$1.gem
+git tag $1
+git push --tags

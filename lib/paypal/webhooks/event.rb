@@ -30,8 +30,12 @@ module Paypal
         verify_cert_url && verify_cert && verify_signature
       end
 
+      def type
+        @params[:event_type]
+      end
+
       def data
-        @data ||= Util.deep_symbolize_keys(@params)
+        @data ||= Util.deep_symbolize_keys(@params)[:resource] || {}
       end
 
     private

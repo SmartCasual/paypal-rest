@@ -107,13 +107,25 @@ RSpec.describe Paypal::Webhooks::Event do
     end
   end
 
+  describe "#type" do
+    subject(:type) { event.type }
+
+    let(:params) { { event_type: "TEST.EVENT.TYPE" } }
+
+    it { is_expected.to eq("TEST.EVENT.TYPE") }
+  end
+
   describe "#data" do
     subject(:data) { event.data }
 
     context "with params" do
-      let(:params) { { foo: "bar" } }
+      let(:params) do
+        {
+          resource: { foo: "bar" },
+        }
+      end
 
-      it "returns the params" do
+      it "returns the resource params" do
         expect(data).to eq(foo: "bar")
       end
     end

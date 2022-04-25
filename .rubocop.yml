@@ -161,6 +161,7 @@ RSpec/ExampleLength:
   Enabled: false
 RSpec/ContextWording:
   Prefixes:
+    - and
     - but
     - if
     - when
@@ -172,6 +173,8 @@ Metrics/BlockLength:
   Exclude:
     - spec/**/*
 Layout/ArgumentAlignment:
+  Enabled: false
+Layout/FirstArgumentIndentation:
   Enabled: false
 Style/TrailingCommaInArrayLiteral:
   EnforcedStyleForMultiline: consistent_comma
@@ -208,6 +211,9 @@ Naming/MethodParameterName:
   AllowedNames:
     - as
     - id
+Layout/LineLength:
+  Exclude:
+    - Gemfile
 Metrics/AbcSize:
   Enabled: false
 Style/IfUnlessModifierOfIfUnless:
@@ -218,9 +224,19 @@ Style/SoleNestedConditional:
   Enabled: false
 Naming/VariableNumber:
   EnforcedStyle: snake_case
+Metrics/ModuleLength:
+  Exclude:
+    - spec/**/*
 RSpec/SubjectStub:
   Enabled: false
+Metrics/ParameterLists:
+  Exclude:
+    - spec/**/*
 Layout/ArrayAlignment:
   Enabled: false
 Layout/FirstArrayElementIndentation:
   Enabled: false
+Style/Alias:
+  EnforcedStyle: prefer_alias_method
+Layout/FirstHashElementIndentation:
+  EnforcedStyle: consistent

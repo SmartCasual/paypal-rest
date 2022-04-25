@@ -16,7 +16,7 @@ module Paypal
     private
 
       def token
-        response[:access_token]
+        Util.deep_symbolize_keys(response)[:access_token]
       end
 
       def expires_at
@@ -41,6 +41,10 @@ module Paypal
           faraday.request :url_encoded
           faraday.response :json
         end
+      end
+
+      def config
+        Paypal::REST.configuration
       end
     end
   end

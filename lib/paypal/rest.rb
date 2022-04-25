@@ -19,12 +19,24 @@ module Paypal
         @configuration = nil
       end
 
-      def create_order(params)
-        post("/v2/checkout/orders", params)[:id]
+      def create_order(full_response: false, **params)
+        if full_response
+          post("/v2/checkout/orders", params:, headers: {
+            Prefer: "return=representation",
+          }) # rubocop:disable Style/TrailingCommaInArguments, Layout/MultilineMethodCallBraceLayout
+        else
+          post("/v2/checkout/orders", params:)[:id]
+        end
       end
 
-      def capture_payment_for_order(order_id)
-        post("/v2/checkout/orders/#{order_id}/capture")
+      def capture_payment_for_order(order_id, full_response: false)
+        if full_response
+          post("/v2/checkout/orders/#{order_id}/capture", headers: {
+            Prefer: "return=representation",
+          }) # rubocop:disable Style/TrailingCommaInArguments, Layout/MultilineMethodCallBraceLayout
+        else
+          post("/v2/checkout/orders/#{order_id}/capture")
+        end
       end
 
       def reset_connection
@@ -34,8 +46,10 @@ module Paypal
 
     private
 
-      def post(path, params = {})
-        response = connection.post(path, params).body
+      def post(path, params: {}, headers: {})
+        reset_connection if @bearer_token&.expired?
+
+        response = connection.post(path, params, headers).body
 
         response = JSON.parse(response) if response.is_a?(String)
         response = Util.deep_symbolize_keys(response)

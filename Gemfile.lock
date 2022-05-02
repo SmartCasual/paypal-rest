@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    paypal-rest (1.1.0)
+    paypal-rest (1.1.1)
       faraday (~> 2.2)
       faraday-retry (~> 1.0)
 

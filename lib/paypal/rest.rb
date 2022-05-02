@@ -46,11 +46,22 @@ module Paypal
 
     private
 
+      def get(path)
+        request do |connection|
+          connection.get(path)
+        end
+      end
+
       def post(path, params: {}, headers: {})
+        request do |connection|
+          connection.post(path, params, headers)
+        end
+      end
+
+      def request
         reset_connection if @bearer_token&.expired?
 
-        response = connection.post(path, params, headers).body
-
+        response = yield(connection).body
         response = JSON.parse(response) if response.is_a?(String)
         response = Util.deep_symbolize_keys(response)
 
@@ -58,8 +69,8 @@ module Paypal
 
         response
       rescue JSON::ParserError, Faraday::ClientError => e
-        Rails.logger.error(["#{self.class} - #{e.class}: #{e.message}", e.backtrace].join($INPUT_RECORD_SEPARATOR))
-        head :unprocessable_entity
+        logger.debug(["#{self.class} - #{e.class}: #{e.message}", e.backtrace].join($INPUT_RECORD_SEPARATOR))
+        raise ClientError, e.message
       end
 
       def connection
@@ -76,6 +87,12 @@ module Paypal
 
         @bearer_token = BearerToken.new
       end
+
+      def logger
+        configuration.logger
+      end
+
+      class ClientError < StandardError; end
     end
   end
 
